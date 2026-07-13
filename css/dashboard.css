@@ -1,0 +1,59 @@
+/* =========================================================
+   dashboard.css — dashboard-only components
+   ========================================================= */
+
+.hero-row { display: grid; grid-template-columns: 1.3fr 1fr; gap: 18px; margin-bottom: 18px; }
+
+.greeting-card {
+  background: linear-gradient(135deg, var(--primary), #6D5EF0 60%, #818CF8);
+  color: white; border-radius: var(--radius-lg); padding: 26px;
+  position: relative; overflow: hidden; box-shadow: 0 16px 40px -16px rgba(var(--primary-rgb), 0.55);
+}
+.greeting-card::after {
+  content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); top: -80px; right: -60px;
+}
+.greeting-card h2 { font-size: 24px; margin-bottom: 6px; }
+.greeting-card p { opacity: 0.9; font-size: 13.5px; }
+.greeting-quote { margin-top: 18px; font-size: 13px; font-style: italic; opacity: 0.85; border-left: 2px solid rgba(255,255,255,0.5); padding-left: 12px; }
+
+.ring-card { display: flex; align-items: center; gap: 22px; }
+.progress-ring {
+  --pct: 0;
+  width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0;
+  background: conic-gradient(var(--primary) calc(var(--pct) * 1%), rgba(var(--primary-rgb),0.12) 0);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.6s ease;
+}
+.progress-ring-inner {
+  width: 74px; height: 74px; border-radius: 50%; background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 18px;
+}
+
+.stat-mini-row { display: flex; gap: 10px; margin-top: 12px; }
+.stat-mini { flex: 1; text-align: center; padding: 10px 6px; border-radius: var(--radius-sm); background: rgba(var(--primary-rgb), 0.06); }
+.stat-mini b { display: block; font-size: 17px; font-family: var(--font-display); }
+.stat-mini span { font-size: 11px; color: var(--text-muted); }
+
+.dash-columns { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+
+.quick-habit {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 8px;
+  cursor: pointer; transition: all 0.2s ease; background: var(--card);
+}
+.quick-habit:hover { border-color: var(--primary); transform: translateX(2px); }
+.quick-habit.done { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.3); }
+.quick-check {
+  width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
+  color: white; flex-shrink: 0; transition: all 0.2s ease;
+}
+.quick-habit.done .quick-check { background: var(--success); border-color: var(--success); }
+.quick-icon { font-size: 16px; }
+.quick-name { flex: 1; font-size: 13.5px; font-weight: 500; }
+.quick-streak { font-size: 11.5px; color: var(--text-muted); }
+
+.mini-goal { padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; }
+.mini-goal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 500; }

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Growth — Personal Productivity Dashboard</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4F46E5">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/habit.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+<div id="toastWrap"></div>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-badge">🌱</span>
+      <span>Habit Growth</span>
+    </div>
+    <nav>
+      <div class="nav-link active" data-page="dashboard"><span class="nav-emoji">🏠</span> Dashboard</div>
+      <div class="nav-link" data-page="habits"><span class="nav-emoji">✅</span> Habits</div>
+      <div class="nav-link" data-page="calendar"><span class="nav-emoji">📅</span> Calendar</div>
+      <div class="nav-link" data-page="stats"><span class="nav-emoji">📊</span> Statistics</div>
+      <div class="nav-link" data-page="goals"><span class="nav-emoji">🎯</span> Goals</div>
+      <div class="nav-link" data-page="notes"><span class="nav-emoji">🗒️</span> Notes</div>
+      <div class="nav-link" data-page="settings"><span class="nav-emoji">⚙️</span> Settings</div>
+      <div class="nav-link" data-page="profile"><span class="nav-emoji">👤</span> Profile</div>
+    </nav>
+    <div class="sidebar-footer">Habit Growth v1.0<br>Built for consistent progress.</div>
+  </aside>
+
+  <div class="main-col">
+
+    <!-- ============ NAVBAR ============ -->
+    <header class="navbar">
+      <div class="navbar-left">
+        <button class="icon-btn sidebar-hamburger" id="sidebarToggle">☰</button>
+        <span class="date-badge" id="dateBadge"></span>
+      </div>
+      <div class="navbar-right">
+        <button class="icon-btn" id="themeToggle" title="Toggle dark mode"><span id="themeIcon">🌙</span></button>
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notifBell" title="Notifications">🔔<span class="notif-dot"></span></button>
+          <div class="notif-panel" id="notifPanel"></div>
+        </div>
+        <div class="profile-avatar" data-goto="profile">A</div>
+      </div>
+    </header>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div><h1>Dashboard</h1><p>Your daily overview at a glance.</p></div>
+      </div>
+
+      <div class="hero-row">
+        <div class="greeting-card">
+          <h2 id="greetingText">Good morning 👋</h2>
+          <p id="greetingSub">Let's build today.</p>
+          <div class="greeting-quote" id="dashQuote"></div>
+        </div>
+        <div class="card ring-card">
+          <div class="progress-ring" id="dashTodayRing"><div class="progress-ring-inner"><span id="dashTodayPct">0%</span></div></div>
+          <div style="flex:1">
+            <div class="card-title">Today's Progress</div>
+            <div class="stat-mini-row">
+              <div class="stat-mini"><b id="dashWeekPct">0%</b><span>Week</span></div>
+              <div class="stat-mini"><b id="dashMonthPct">0%</b><span>Month</span></div>
+            </div>
+            <div class="stat-mini-row">
+              <div class="stat-mini"><b id="dashCurrent">0</b><span>Streak</span></div>
+              <div class="stat-mini"><b id="dashLongest">0</b><span>Best streak</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-columns">
+        <div class="card">
+          <div class="card-title">Today's Habits <span class="muted" style="font-weight:400">tap to toggle</span></div>
+          <div id="dashTodayList"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Active Goals <a href="#" data-goto="goals" style="font-size:12px;font-weight:600;color:var(--primary)">View all →</a></div>
+          <div id="dashGoalsPreview"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HABITS ============ -->
+    <section class="page" id="page-habits">
+      <div class="page-header">
+        <div><h1>Habit Tracker</h1><p>Check off each day. Drag rows to reorder. Press "/" to search.</p></div>
+        <button class="btn btn-primary" id="addHabitBtn">+ Add Habit</button>
+      </div>
+
+      <div class="progress-stats-grid">
+        <div class="stat-box"><b id="statOverall">0%</b><span>Overall</span></div>
+        <div class="stat-box"><b id="statToday">0%</b><span>Today</span></div>
+        <div class="stat-box"><b id="statWeek">0%</b><span>This Week</span></div>
+        <div class="stat-box"><b id="statMonth">0%</b><span>This Month</span></div>
+        <div class="stat-box"><b id="statMissed">0</b><span>Missed Days</span></div>
+      </div>
+      <div class="grid grid-4" style="margin-bottom:18px;">
+        <div class="stat-box"><b id="statCurrentStreak">0</b><span>Current Streak</span></div>
+        <div class="stat-box"><b id="statLongestStreak">0</b><span>Longest Streak</span></div>
+        <div class="stat-box"><b id="statBest" style="font-size:13px">—</b><span>Best Habit</span></div>
+        <div class="stat-box"><b id="statWorst" style="font-size:13px">—</b><span>Needs Work</span></div>
+      </div>
+
+      <div class="today-progress-bar-wrap">
+        <div class="label-row"><span>Today's overall progress</span><span></span></div>
+        <div class="progress-track"><div class="progress-fill" id="todayProgressBar" style="width:0%"></div></div>
+      </div>
+
+      <div class="habit-toolbar">
+        <div class="month-nav">
+          <button id="habitPrevMonth">‹</button>
+          <span id="habitMonthLabel"></span>
+          <button id="habitNextMonth">›</button>
+        </div>
+        <div class="search-wrap"><input type="text" id="habitSearch" placeholder="Search habits…"></div>
+      </div>
+
+      <div id="categoryChips"></div>
+
+      <div class="habit-table-wrap"><div id="habitGridWrap"></div></div>
+    </section>
+
+    <!-- ============ CALENDAR ============ -->
+    <section class="page" id="page-calendar">
+      <div class="page-header">
+        <div><h1>Calendar</h1><p>Click any date to see completed habits and add a note.</p></div>
+      </div>
+      <div class="card">
+        <div class="habit-toolbar">
+          <div class="month-nav">
+            <button id="calPrevMonth">‹</button>
+            <span id="calMonthLabel"></span>
+            <button id="calNextMonth">›</button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calendarGrid"></div>
+      </div>
+    </section>
+
+    <!-- ============ STATISTICS ============ -->
+    <section class="page" id="page-stats">
+      <div class="page-header">
+        <div><h1>Statistics</h1><p>Deep dive into your consistency.</p></div>
+        <div style="display:flex; gap:10px">
+          <button class="btn btn-outline" id="exportCSVBtn">⬇️ Export CSV</button>
+          <button class="btn btn-outline" id="exportPDFBtn">🖨️ Export PDF</button>
+        </div>
+      </div>
+
+      <div class="grid grid-4" style="margin-bottom:18px;">
+        <div class="stat-box"><b id="statTotalHabits">0</b><span>Total Habits</span></div>
+        <div class="stat-box"><b id="statCompletedToday">0</b><span>Completed Today</span></div>
+        <div class="stat-box"><b id="statFailedToday">0</b><span>Missed Today</span></div>
+        <div class="stat-box"><b id="statAvgPct">0%</b><span>30-day Average</span></div>
+      </div>
+
+      <div class="grid grid-3" style="margin-bottom:18px;">
+        <div class="stat-box"><b id="statWeeklyReport">0%</b><span>Weekly Report</span></div>
+        <div class="stat-box"><b id="statMonthlyReport">0%</b><span>Monthly Report</span></div>
+        <div class="stat-box"><b id="statYearlyReport">0%</b><span>Yearly Report</span></div>
+      </div>
+
+      <div class="grid grid-2" style="margin-bottom:18px;">
+        <div class="card chart-card"><div class="card-title">Completion Trend (14 days)</div><canvas id="trendChart"></canvas></div>
+        <div class="card chart-card"><div class="card-title">Completed vs Missed (30 days)</div><canvas id="pieChart"></canvas></div>
+      </div>
+
+      <div class="card chart-card" style="margin-bottom:18px;">
+        <div class="card-title">Habit Comparison (30-day %)</div>
+        <canvas id="barChart"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Contribution Heatmap</div>
+        <div id="heatmapWrap"></div>
+      </div>
+    </section>
+
+    <!-- ============ GOALS ============ -->
+    <section class="page" id="page-goals">
+      <div class="page-header">
+        <div><h1>Goals</h1><p>Track long-term and short-term goals to completion.</p></div>
+        <button class="btn btn-primary" id="addGoalBtn">+ Add Goal</button>
+      </div>
+      <div id="goalsList"></div>
+    </section>
+
+    <!-- ============ NOTES ============ -->
+    <section class="page" id="page-notes">
+      <div class="page-header">
+        <div><h1>Notes</h1><p>Pin what matters, checklist the rest.</p></div>
+        <button class="btn btn-primary" id="addNoteBtn">+ Add Note</button>
+      </div>
+      <div class="search-wrap" style="margin-bottom:16px;"><input type="text" id="noteSearch" placeholder="Search notes…" style="width:260px"></div>
+      <div id="notesList"></div>
+    </section>
+
+    <!-- ============ SETTINGS ============ -->
+    <section class="page" id="page-settings">
+      <div class="page-header"><div><h1>Settings</h1><p>Personalize the app and manage your data.</p></div></div>
+      <div class="card" style="max-width:560px;">
+        <div class="settings-row">
+          <div><div class="settings-row-label">Theme</div><div class="settings-row-desc">Light or dark mode</div></div>
+          <select id="themeSelect" style="padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Accent Color</div><div class="settings-row-desc">Choose the primary app color</div></div>
+          <div class="accent-swatches">
+            <div class="accent-swatch" data-accent="#4F46E5" style="background:#4F46E5"></div>
+            <div class="accent-swatch" data-accent="#22C55E" style="background:#22C55E"></div>
+            <div class="accent-swatch" data-accent="#F59E0B" style="background:#F59E0B"></div>
+            <div class="accent-swatch" data-accent="#EF4444" style="background:#EF4444"></div>
+            <div class="accent-swatch" data-accent="#0EA5E9" style="background:#0EA5E9"></div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Notifications</div><div class="settings-row-desc">Reminders and streak alerts</div></div>
+          <label class="switch"><input type="checkbox" id="notifToggle"><span class="slider-toggle"></span></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Backup Data</div><div class="settings-row-desc">Download all your data as JSON</div></div>
+          <button class="btn btn-outline btn-sm" id="backupBtn">Backup</button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Restore Data</div><div class="settings-row-desc">Load data from a JSON backup</div></div>
+          <label class="btn btn-outline btn-sm" style="cursor:pointer">Restore<input type="file" id="restoreInput" accept="application/json" style="display:none"></label>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Reset Data</div><div class="settings-row-desc">Erase everything and start fresh</div></div>
+          <button class="btn btn-danger btn-sm" id="resetDataBtn">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROFILE ============ -->
+    <section class="page" id="page-profile">
+      <div class="page-header"><div><h1>Profile</h1><p>Your identity and targets.</p></div></div>
+      <div class="card" style="max-width:520px;">
+        <div class="profile-header">
+          <div class="profile-avatar-lg" id="profilePreview">A</div>
+          <div>
+            <label class="upload-label">Change photo
+              <input type="file" id="profilePhotoInput" accept="image/*" style="display:none">
+            </label>
+          </div>
+        </div>
+        <form id="profileForm">
+          <div class="form-group"><label>Name</label><input type="text" id="profileName" name="profileName" required></div>
+          <div class="form-row">
+            <div class="form-group"><label>Daily Target (habits)</label><input type="number" id="profileDaily" name="profileDaily" min="0"></div>
+            <div class="form-group"><label>Weekly Goal (%)</label><input type="number" id="profileWeekly" name="profileWeekly" min="0" max="100"></div>
+          </div>
+          <div class="form-group"><label>Monthly Goal (%)</label><input type="number" id="profileMonthly" name="profileMonthly" min="0" max="100"></div>
+          <div class="form-actions"><button type="submit" class="btn btn-primary">Save Profile</button></div>
+        </form>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+
+<div class="modal-overlay" id="goalFormOverlay">
+  <div class="modal">
+    <div class="modal-header"><h3>New Goal</h3><button class="icon-btn" id="goalFormCancel">✕</button></div>
+    <form id="goalForm">
+      <div class="form-group"><label>Title</label><input type="text" name="goalTitle" required></div>
+      <div class="form-row">
+        <div class="form-group"><label>Type</label>
+          <select name="goalType"><option value="long">Long-term</option><option value="short">Short-term</option></select>
+        </div>
+        <div class="form-group"><label>Priority</label>
+          <select name="goalPriority"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Deadline</label><input type="date" name="goalDeadline"></div>
+        <div class="form-group"><label>Starting Progress %</label><input type="number" name="goalProgress" min="0" max="100" value="0"></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="goalFormCancel2" onclick="Goals.closeForm()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Goal</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="noteFormOverlay">
+  <div class="modal">
+    <div class="modal-header"><h3>New Note</h3><button class="icon-btn" id="noteFormCancel">✕</button></div>
+    <form id="noteForm">
+      <div class="form-group"><label>Title</label><input type="text" name="noteTitle"></div>
+      <div class="form-group"><label>Content</label><textarea name="noteContent"></textarea></div>
+      <div class="form-group"><label>Checklist (comma separated, optional)</label><input type="text" name="noteChecklist" placeholder="Buy notebook, Plan week, Review goals"></div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" onclick="Notes.closeForm()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Note</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="dayModalOverlay">
+  <div class="modal">
+    <div class="modal-header"><h3 id="dayModalTitle">Date</h3><button class="icon-btn" id="dayModalClose">✕</button></div>
+    <div id="dayHabitList" style="margin-bottom:14px;"></div>
+    <div class="form-group"><label>Note for this day</label><textarea id="dayNoteInput" placeholder="Write anything about this day…"></textarea></div>
+    <div class="form-actions"><button class="btn btn-primary" id="dayNoteSave">Save Note</button></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/habit.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

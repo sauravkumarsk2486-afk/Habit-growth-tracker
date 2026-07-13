@@ -1,0 +1,13 @@
+{
+  "name": "Habit Growth — Personal Productivity Dashboard",
+  "short_name": "Habit Growth",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#4F46E5",
+  "description": "A premium habit tracker, calendar, goals and notes dashboard.",
+  "icons": [
+    { "src": "assets/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "assets/icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml" }
+  ]
+}
