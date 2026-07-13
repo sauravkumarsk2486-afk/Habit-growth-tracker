@@ -128,14 +128,6 @@ Contributions and forks that build on these are very welcome.
 
 ---
 
-## 🤝 Contributing
-
-1. Fork the repo
-2. Create a branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m "Add your feature"`
-4. Push and open a Pull Request
-
----
 
 ## 📄 License
 
