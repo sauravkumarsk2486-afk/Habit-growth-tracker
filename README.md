@@ -27,8 +27,7 @@ All data is stored locally in your browser via `localStorage` — nothing is sen
 
 ## 📸 Preview
 
-> Add your own screenshots here once you've run it locally:
-> `assets/images/dashboard.png`, `assets/images/habit-tracker.png`, etc.
+> ![Habit-growth-tracker](Screenshot12.png)
 
 ---
 
